@@ -64,7 +64,7 @@ class Column(Drawable):
         return '    {}{} {{label:"{}"}}'.format(self.key_symbol, self.name, self.type)
 
     def to_dot(self):
-        base = ROW_TAGS.format(' ALIGN="LEFT"', '{key_opening}{col_name}{key_closing}{type}')
+        base = ROW_TAGS.format(' ALIGN="LEFT" PORT={!r}'.format(self.name), '{key_opening}{col_name}{key_closing}{type}')
         return base.format(
             key_opening='<u>' if self.is_key else '',
             key_closing='</u>' if self.is_key else '',
@@ -87,6 +87,7 @@ class Relation(Drawable):
 
     @staticmethod
     def make_from_match(match):
+        # TODO: {right,left}_id
         return Relation(
             right_col=match.group('right_name'),
             left_col=match.group('left_name'),
@@ -94,12 +95,14 @@ class Relation(Drawable):
             left_cardinality=match.group('left_cardinality'),
         )
 
-    def __init__(self, right_col, left_col, right_cardinality=None, left_cardinality=None):
+    def __init__(self, right_col, right_id, left_col, left_id, right_cardinality=None, left_cardinality=None):
         if right_cardinality not in self.cardinalities.keys() \
                 or left_cardinality not in self.cardinalities.keys():
             raise ValueError('Cardinality should be in {}"'.format(self.cardinalities.keys()))
         self.right_col = right_col
+        self.right_id = right_id
         self.left_col = left_col
+        self.left_id = left_id
         self.right_cardinality = right_cardinality
         self.left_cardinality = left_cardinality
 
@@ -126,7 +129,7 @@ class Relation(Drawable):
         if self.right_cardinality != '':
             cards.append('head' +
                          self.graphviz_cardinalities(self.right_cardinality))
-        return '"{}" -- "{}" [{}];'.format(self.left_col, self.right_col, ','.join(cards))
+        return '"{}":"{}" -- "{}":"{}" [{}];'.format(self.left_col, self.left_id, self.right_col, self.right_id, ','.join(cards))
 
     def __eq__(self, other):
         if Drawable.__eq__(self, other):
