@@ -64,15 +64,15 @@ def test_column_is_dot_format():
 
 def test_relation():
     relation_re = re.compile(
-        r'\"(?P<l_name>.+)\":\"(?P<l_id>.+)\"\ \-\-\ \"(?P<r_name>.+)\":\"(?P<r_id>.+)\"\ '
+        r'\"(?P<l_table>.+)\":\"(?P<l_column>.+)\"\ \-\-\ \"(?P<r_table>.+)\":\"(?P<r_column>.+)\"\ '
         r'\[taillabel\=\<\<FONT\>(?P<l_card>.+)\<\/FONT\>\>'
         r'\,headlabel\=\<\<FONT\>(?P<r_card>.+)\<\/FONT\>\>\]\;')
     dot = relation.to_dot()
     r = relation_re.match(dot)
-    assert r.group('l_name') == 'child'
-    assert r.group('l_id') == 'parent_id'
-    assert r.group('r_name') == 'parent'
-    assert r.group('r_id') == 'id'
+    assert r.group('l_table') == 'child'
+    assert r.group('l_column') == 'parent_id'
+    assert r.group('r_table') == 'parent'
+    assert r.group('r_column') == 'id'
     assert r.group('l_card') == '{0,1}'
     assert r.group('r_card') == '0..N'
 

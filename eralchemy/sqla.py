@@ -31,10 +31,10 @@ def relation_to_intermediary(fk, schema=None):
     # retrieved table names.
 
     return Relation(
-        right_col=format_name(fk.parent.table.fullname),
-        right_id=format_name(fk.parent.name),
-        left_col=get_relationship_left_column(fk, schema),
-        left_id=format_name(fk._column_tokens[2]),
+        right_table=format_name(fk.parent.table.fullname),
+        right_column=format_name(fk.parent.name),
+        left_table=get_relationship_left_column(fk, schema),
+        left_column=format_name(fk._column_tokens[2]),
         right_cardinality='?',
         left_cardinality='*',
     )
