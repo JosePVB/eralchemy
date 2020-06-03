@@ -19,7 +19,7 @@ def get_relationship_left_column(fk, schema):
     if schema:
         return "{}.{}".format(schema, format_name(fk._column_tokens[1]))
 
-    return format_name(fk._column_tokens[1])
+    return format_name(fk.target_fullname.rsplit('.', maxsplit=1)[0])
 
 
 def relation_to_intermediary(fk, schema=None):
